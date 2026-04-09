@@ -1,0 +1,11 @@
+mod/*/local/
+.report/
+**/.report/
+**/.run.gxl
+**/used.json
+**/_used.json
+**/used.yml
+artifacts
+mod/*/values/
+values/*
+.idea

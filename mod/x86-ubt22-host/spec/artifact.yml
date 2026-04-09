@@ -1,0 +1,5 @@
+- name: victoria-metrics
+  version: latest
+  origin_addr:
+    url: https://dy-sec-generic.pkg.coding.net/galaxy-open/ubuntu22/victoria-metrics?version=latest
+  local: victoria-metrics

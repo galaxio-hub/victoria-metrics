@@ -1,0 +1,93 @@
+extern mod mod_ops { git =  "https://cnb.cool/dy-sec/ops/mechanism/ops-gxl.git", channel = "${GXL_CHANNEL_OPS:main}" }
+extern mod binary_utils { git = "https://cnb.cool/dy-sec/ops/mechanism/gxl-dayu.git" , channel = "${GXL_CHANNEL_COMMON:main}" }
+
+mod operators:empty_operators{
+    #[auto_load(entry)]
+    flow __into {
+        gx.read_file( file : "./values/_used.json" ) ;
+    }
+
+    
+    #[task(name="${server_name}@x86-ubt22-host:install")]
+    flow pre_check | @install {
+      binary_utils.create_mod_dir(${work_dir});
+      binary_utils.create_sys_dir( ${sys_space} , server_name:${server_name} );
+      binary_utils.fetch_resources(${work_dir});
+      binary_utils.generate_mod(${work_dir});
+      operators.verify(${work_dir});
+      operators.configure_service();
+
+
+    }
+    #[task(name="${server_name}@x86-ubt22-host:configure_service")]
+    fn configure_service(){
+      gx.echo ( "正在配置 ${server_name} 服务..." );
+      gx.cmd ( "sudo cp ./local/work/etc/victoria-metrics.service ${SERVER_DIR}/${server_name}.service" );
+      gx.cmd ( "sudo systemctl daemon-reload" );
+    }
+
+    fn verify(*work_dir){
+      gx.echo ( "验证制品..." );
+      // gx.cmd(cmd : " ${work_dir}/bin/${server_name} -c  ${work_dir}/etc/${server_name}.yml --dry-run");
+      // gx.cmd ( "./sh/verify.sh ${work_dir}" );
+    }
+    
+    // 安装操作 - 符合操作类型建议的流程
+    #[task(name="${server_name}@x86-ubt22-host:check")]
+    flow pre_check {
+      gx.echo ( "执行前置检查..." );
+      // TODO: 检查依赖、权限等
+    }
+
+    #[task(name="${server_name}@x86-ubt22-host:start")]
+    flow start {
+      gx.echo ( "正在加载 ${server_name}.service..." );
+      gx.cmd ( "sudo systemctl start ${server_name};" );
+    }
+    #[task(name="${server_name}@x86-ubt22-host:stop")]
+    flow stop {
+      gx.echo ( "正在停止 ${server_name} 服务..." );
+      gx.cmd ( "sudo systemctl stop ${server_name};" );
+    }
+    #[task(name="${server_name}@x86-ubt22-host:restart")]
+    flow restart{
+        gx.echo ( "正在重启 ${server_name}.service..." );
+        gx.cmd ( "sudo systemctl restart ${server_name};" );
+    }
+    #[task(name="${server_name}@x86-ubt22-host:status")]
+    flow status{
+        gx.echo ( "" );
+        gx.echo ( "---------------${server_name}状态---------------" );
+        gx.cmd ( "sudo systemctl status ${server_name};" );
+        gx.echo ( "-------------------end--------------------" );
+    }
+
+    #[task(name="${server_name}@x86-ubt22-host:update")]
+    flow @update | apply_update {
+      gx.echo ( "执行更新操作" );
+      binary_utils.create_mod_dir("${SYS_SPACE}/.swap/${server_name}");
+      binary_utils.create_sys_dir( ${sys_space} , ${server_name} );
+      binary_utils.fetch_resources("${SYS_SPACE}/.swap/${server_name}");
+      binary_utils.generate_mod("${SYS_SPACE}/.swap/${server_name}");
+      operators.verify("${SYS_SPACE}/.swap/${server_name}");
+    }
+
+    #[task(name="${server_name}@x86-ubt22-host:apply_update")]
+    flow apply_update {
+        gx.echo("应用更新...");
+        gx.cmd("rm -rf ${WORK_DIR}");
+        gx.cmd("mv ${SYS_SPACE}/.swap/${server_name} ${MOD_SPACE}");
+        gx.echo("更新完成");
+    }
+    #[task(name="${server_name}@x86-ubt22-host:uninstall")]
+    flow stop | @uninstall {
+      gx.echo("开始卸载 ${server_name}...");
+      gx.cmd("sudo systemctl stop ${server_name}");
+      gx.cmd("sudo systemctl disable ${server_name}");
+      gx.cmd("sudo rm ${server_dir}/${server_name}.service");
+      binary_utils.clear_mod_dir( ${work_dir} );
+      binary_utils.clear_sys_dir( ${sys_space} , server_name:${server_name} );
+      gx.cmd("sudo systemctl daemon-reload");
+      gx.echo("${server_name} 卸载完成...");
+    }
+}

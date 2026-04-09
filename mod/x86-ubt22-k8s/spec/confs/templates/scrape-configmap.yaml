@@ -1,0 +1,20 @@
+{{- $app := .Values.server }}
+{{- if and $app.scrape.enabled (empty $app.scrape.configMap) }}
+{{- $ctx := dict "helm" . "appKey" "server" }}
+{{- $fullname := include "vm.plain.fullname" $ctx }}
+{{- $ns := include "vm.namespace" $ctx }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}-scrapeconfig
+  namespace: {{ $ns }}
+  labels: {{ include "vm.labels" $ctx | nindent 4 }}
+data:
+  {{- $currentScope := . }}
+  {{- if .Files.Get "settings/scrape.yml" }}
+  scrape.yml: |
+    {{- with $currentScope }}
+    {{- tpl (.Files.Get "settings/scrape.yml") . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}

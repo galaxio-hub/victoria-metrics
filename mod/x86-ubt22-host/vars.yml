@@ -1,0 +1,17 @@
+vars:
+- name: MOD_SPACE
+  value: "${HOME}/mod_space"
+- name: SYS_SPACE
+  value: "${HOME}/sys_space"
+- name: SERVER_NAME
+  value: "VictoriaMetrics"
+- name: WORK_DIR
+  value: "${MOD_SPACE}/${SERVER_NAME}"
+- name: SERVER_DIR
+  value: "/usr/lib/systemd/system"
+- name: RETENTION_PERIOD 
+  value: 12
+- name: HTTP_LISTEN_ADDR
+  value: 8428
+
+

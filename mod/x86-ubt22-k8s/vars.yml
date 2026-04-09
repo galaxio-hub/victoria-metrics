@@ -1,0 +1,99 @@
+immutable:
+- name: VMETRICS_IMAGE_REPOSITORY
+  value: victoriametrics/victoria-metrics
+- name: VMETRICS_IMAGE_TAG
+  value: v1.95.1
+
+module:
+- name: APP_NAME
+  value: victoria-metrics
+- name: NAMESPACE
+  value: "monitor"
+- name: IMAGE_REGISTRY
+  value: docker.io
+- name: IMAGE_PULL_SECRET
+  value: "demo"
+- name: SCRAPE_ENABLED
+  value: true
+- name: VMETRICS_REPLICA_COUNT
+  value: 1
+- name: VMETRICS_PRIORITY_CLASS_NAME
+  value: ""
+- name: VMETRICS_FULLNAME_OVERRIDE
+  value: "victoria-metrics-server"
+- name: VMETRICS_RETENTION_PERIOD
+  value: 15d
+- name: VMETRICS_EXTRA_ARGS
+  value: |2
+        envflag.enable: true
+        envflag.prefix: VM_
+        loggerFormat: json
+        httpListenAddr: :8428
+- name: VMETRICS_EXTRA_HOST_PATH_MOUNTS
+  value: |2
+        []
+- name: VMETRICS_EXTRA_VOLUMES
+  value: |2
+        []
+- name: VMETRICS_EXTRA_VOLUME_MOUNTS
+  value: |2
+        []
+- name: VMETRICS_ENV
+  value: |2
+        []
+# 是否启用 PVC, values.yaml server.persistentVolume.enabled
+- name: VMETRICS_PVC_ENABLED
+  value: false
+# PVC 容量, values.yaml server.persistentVolume.size
+- name: VMETRICS_PVC_SIZE
+  value: 10Gi
+# Pod 资源配置, values.yaml server.resources
+- name: VMETRICS_RESOURCES
+  value: |2
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+- name: VMETRICS_PROBE_READINESS
+  value: |2
+          httpGet: {}
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 3
+- name: VMETRICS_PROBE_LIVENESS
+  value: |2
+          tcpSocket: {}
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 10
+- name: VMETRICS_PROBE_STARTUP
+  value: |2
+          {}
+- name: VMETRICS_SVC_NODEPORT
+  value: "30428"
+- name: VMETRICS_SVC_TYPE
+  value: NodePort
+- name: VMETRICS_PDB_ENABLED
+  value: false
+- name: VMETRICS_PDB_MIN_AVAILABLE
+  value: 1
+- name: VMETRICS_PDB_MAX_UNAVAILABLE
+  value: 1
+
+  
+system:
+- name: RUNTIME
+  value: containerd
+- name: AIR_GAPPED
+  value: false
+- name: KUBECONFIG
+  value: ~/.kube/config
+- name: STORAGE_CLASS
+  value: ""
+
+
+

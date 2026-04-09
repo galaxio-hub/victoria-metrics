@@ -1,0 +1,13 @@
+extern mod operators { path = "./workflows";  } 
+
+
+mod envs   {
+    env local {
+        SPEC_DIR = "local";    
+        }
+    env spec {
+        SPEC_DIR = "spec";
+    }
+    env default  : local;
+}
+mod main : operators {}

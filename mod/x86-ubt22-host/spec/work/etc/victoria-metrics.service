@@ -1,0 +1,14 @@
+[Unit]
+Description=VictoriaMetrics
+After=network.target
+
+[Service]
+ExecStart={{WORK_DIR}}/bin/victoria-metrics -storageDataPath={{SYS_SPACE}}/data/{{SERVER_NAME}} -retentionPeriod={{RETENTION_PERIOD}} -httpListenAddr=:{{HTTP_LISTEN_ADDR}}
+Restart=on-failure
+LimitNOFILE=65536
+
+StandardOutput=append:{{SYS_SPACE}}/logs/{{SERVER_NAME}}/VictoriaMetrics-out.log
+StandardError=append:{{SYS_SPACE}}/logs/{{SERVER_NAME}}/VictoriaMetrics-err.log
+
+[Install]
+WantedBy=multi-user.target

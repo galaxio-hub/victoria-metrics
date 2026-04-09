@@ -1,0 +1,4 @@
+extern mod helm_ops { git = "https://github.com/galaxio-hub/ops-gxl.git", channel = "${GXL_CHANNEL:main}" }
+mod operators : helm_ops {
+  
+}

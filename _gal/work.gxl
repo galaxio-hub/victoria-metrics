@@ -1,0 +1,26 @@
+extern mod mod_ops { git = "https://github.com/galaxio-hub/ops-gxl.git", channel = "${GXL_CHANNEL:main}" }
+mod envs : {
+    env  _common {
+        module_env = "default";
+    }
+    env arm_mac : _common {
+        model = "arm-mac14-host";
+        
+    }
+    env x86_ubt : _common {
+        model = "x86-ubt22-host";
+    }
+    env x86_k8s : _common {
+        model = "x86-ubt22-k8s";
+    }
+    env default : _common {
+	  model = "x86-ubt22-k8s" ;
+	}
+
+}
+mod main : mod_ops {
+    flow conf{
+        gx.cmd("gops mod update");
+        gx.cmd("gops mod localize");
+    }
+}

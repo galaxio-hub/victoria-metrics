@@ -1,0 +1,11 @@
+test_envs:
+  dep_root: ''
+  deps: []
+
+# test_envs:
+#   dep_root: ""
+#   deps:
+#   - addr:
+#       repo: git@e.coding.net:dy-sec/s-devkit/kubeconfig.git
+#       path: dss-center/di
+#     local:  env

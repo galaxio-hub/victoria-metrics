@@ -1,0 +1,8 @@
+localize:
+  templatize_path:
+    excludes:
+    - spec/confs/templates
+    - spec/confs/charts/templates
+  templatize_cust:
+    label_beg: '[['
+    label_end: ']]'
