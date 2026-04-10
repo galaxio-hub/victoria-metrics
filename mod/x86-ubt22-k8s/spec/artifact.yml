@@ -1,11 +1,7 @@
-- name: victoria/victoria-metrics
-  version: v1.95.1-alpha.1
+- name: victoriametrics/victoria-metrics
+  version: v1.95.1
   origin_addr:
-    url: dysec-docker-alpha.corp.dy-sec.com
+    url: docker.io
   local: docker_image
-- name: victoria/vmbackupmanager
-  version: v1.0.0-alpha.1
-  origin_addr:
-    url: dysec-docker-alpha.corp.dy-sec.com
-  local: docker_image
+
 
